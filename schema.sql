@@ -1,0 +1,1 @@
+-- Define the structure of your database, here.
