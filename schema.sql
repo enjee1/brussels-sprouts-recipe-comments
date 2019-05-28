@@ -11,6 +11,6 @@ CREATE TABLE recipes (
 
 CREATE TABLE comments (
   id SERIAL PRIMARY KEY,
-  comment VARCHAR(255),
+  title VARCHAR(255),
   recipe_id SERIAL references recipes(id)
 );

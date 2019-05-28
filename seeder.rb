@@ -40,7 +40,7 @@ db_connection  do |conn|
   recipe_id_array = conn.exec("SELECT id FROM recipes").to_a
   comments.each do |comment|
     recipe_index = rand(recipe_id_array.length - 1)
-    conn.exec_params("INSERT INTO comments (comment, recipe_id) VALUES ($1, $2)",
+    conn.exec_params("INSERT INTO comments (title, recipe_id) VALUES ($1, $2)",
     [comment, recipe_id_array[recipe_index]["id"]])
   end
 end
