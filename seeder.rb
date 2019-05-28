@@ -1,4 +1,6 @@
 require "pg"
+require "faker"
+require "pry"
 
 TITLES = [
   "Roasted Brussels Sprouts",
@@ -14,4 +16,31 @@ TITLES = [
   "Brussels Sprouts and Egg Salad with Hazelnuts"
 ]
 
-# Write code to seed your database, here
+comments = []
+25.times do
+  comments <<  Faker::ChuckNorris.fact
+end
+
+
+
+def db_connection
+  begin
+    connection = PG.connect(dbname: "brussels_sprouts_recipes")
+    yield(connection)
+  ensure
+    connection.close
+  end
+end
+
+db_connection  do |conn|
+  TITLES.each do |recipe_title|
+    conn.exec_params("INSERT INTO recipes (title) VALUES ($1)", [recipe_title])
+  end
+
+  recipe_id_array = conn.exec("SELECT id FROM recipes").to_a
+  comments.each do |comment|
+    recipe_index = rand(recipe_id_array.length - 1)
+    conn.exec_params("INSERT INTO comments (comment, recipe_id) VALUES ($1, $2)",
+    [comment, recipe_id_array[recipe_index]["id"]])
+  end
+end
